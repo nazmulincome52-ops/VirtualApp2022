@@ -18,14 +18,19 @@ jobs:
         repository: nazmulincome52-ops/VirtualApp2022
         ref: va
 
-    - name: Set up JDK 8
+    - name: Set up JDK 17
       uses: actions/setup-java@v4
       with:
-        java-version: '8'
+        java-version: '17'
         distribution: 'temurin'
 
     - name: Setup Android SDK
       uses: android-actions/setup-android@v3
+      with:
+        cmdline-tools-version: 10406996
+        accept-android-sdk-licenses: true
+        log-accepted-android-sdk-licenses: true
+        packages: tools platform-tools build-tools;30.0.0 platforms;android-30
 
     - name: Cache Gradle packages
       uses: actions/cache@v4
@@ -47,11 +52,13 @@ jobs:
       run: ./gradlew assembleAospDebug --no-daemon --stacktrace
       env:
         GRADLE_OPTS: "-Xmx4096m -Dorg.gradle.jvmargs=-Xmx4096m"
+        SKIP_JDK_VERSION_CHECK: true
 
     - name: Build release APK (fdroid flavor)
       run: ./gradlew assembleFdroidRelease --no-daemon --stacktrace
       env:
         GRADLE_OPTS: "-Xmx4096m -Dorg.gradle.jvmargs=-Xmx4096m"
+        SKIP_JDK_VERSION_CHECK: true
 
     - name: Upload aosp debug APK
       uses: actions/upload-artifact@v4
