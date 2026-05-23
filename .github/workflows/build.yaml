@@ -41,23 +41,22 @@ jobs:
         restore-keys: gradle-
 
     - name: Build debug APK (aosp)
-      run: ./gradlew assembleAospDebug --no-daemon --stacktrace 2>&1 | tail -80
+      run: ./gradlew assembleAospDebug --no-daemon --stacktrace
 
     - name: Build release APK (fdroid)
-      run: ./gradlew assembleFdroidRelease --no-daemon --stacktrace 2>&1 | tail -80
+      run: ./gradlew assembleFdroidRelease --no-daemon --stacktrace
 
-    - name: Upload aosp debug APK
+    - name: Find APKs
+      run: |
+        echo "=== Searching for APKs ==="
+        find . -name "*.apk" -type f 2>/dev/null
+        echo "=== app/build/outputs ==="
+        ls -laR app/build/outputs/ 2>/dev/null || echo "No outputs dir"
+
+    - name: Upload all APKs
       uses: actions/upload-artifact@v4
       if: always()
       with:
-        name: aosp-debug-apk
-        path: app/build/outputs/apk/aosp/debug/*.apk
-        retention-days: 30
-
-    - name: Upload fdroid release APK
-      uses: actions/upload-artifact@v4
-      if: always()
-      with:
-        name: fdroid-release-apk
-        path: app/build/outputs/apk/fdroid/release/*.apk
+        name: all-apks
+        path: '**/*.apk'
         retention-days: 30
