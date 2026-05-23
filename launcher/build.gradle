@@ -11,7 +11,7 @@ buildscript {
     }
 }
 
-apply plugin: 'com.android.application'
+apply plugin: 'com.android.library'
 apply plugin: 'com.google.protobuf'
 
 android {
@@ -52,14 +52,10 @@ android {
 
     productFlavors {
         aosp {
-            applicationId 'amirz.rootless.nexuslauncher'
-            testApplicationId 'amirz.rootless.nexuslauncher.tests'
             flavorDimensions 'default'
         }
 
         l3go {
-            applicationId 'amirz.rootless.nexuslauncher'
-            testApplicationId 'amirz.rootless.nexuslauncher.tests'
             flavorDimensions 'default'
         }
     }
