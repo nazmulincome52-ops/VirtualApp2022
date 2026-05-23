@@ -16,21 +16,23 @@ jobs:
       with:
         ref: va
 
-    - name: Set up JDK 11
+    - name: Set up JDK 17 (for SDK tools only)
       uses: actions/setup-java@v4
       with:
-        java-version: '11'
+        java-version: '17'
         distribution: 'temurin'
 
     - name: Setup Android SDK
       uses: android-actions/setup-android@v3
 
     - name: Strip SDK XML (old AGP can't parse modern schemas)
-      run: |
-        echo "=== Deleting all package.xml files ==="
-        find $ANDROID_HOME -name "package.xml" -type f -delete
-        echo "=== Remaining XML ==="
-        find $ANDROID_HOME -name "*.xml" | head -20 || echo "none"
+      run: find $ANDROID_HOME -name "package.xml" -type f -delete
+
+    - name: Set up JDK 11 (for build)
+      uses: actions/setup-java@v4
+      with:
+        java-version: '11'
+        distribution: 'temurin'
 
     - name: Delete local.properties
       run: rm -f local.properties
@@ -44,16 +46,15 @@ jobs:
         path: |
           ~/.gradle/caches
           ~/.gradle/wrapper
-        key: gradle4-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-        restore-keys: gradle4-
+        key: gradle5-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+        restore-keys: gradle5-
 
     - name: Build APK
       run: ./gradlew assembleDebug --no-daemon --stacktrace
 
     - name: Find APKs
       if: always()
-      run: |
-        find . -name "*.apk" -type f 2>/dev/null || echo "No APKs"
+      run: find . -name "*.apk" -type f 2>/dev/null || echo "No APKs"
 
     - name: Upload APK
       uses: actions/upload-artifact@v4
