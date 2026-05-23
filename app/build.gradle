@@ -33,9 +33,9 @@ android {
                 }
             }
         }
+        // Resolve flavor dimension mismatches with sub-projects
+        missingDimensionStrategy 'default', 'aosp'
     }
-    // Resolve flavor dimension mismatches with sub-projects
-    missingDimensionStrategy 'default', 'aosp'
     // https://developer.android.com/studio/build/gradle-plugin-3-0-0-migration.html?utm_source=android-studio
     flavorDimensions 'main'
     productFlavors {

@@ -43,15 +43,13 @@ jobs:
     - name: Build debug APK (aosp)
       run: ./gradlew assembleAospDebug --no-daemon --stacktrace
 
-    - name: Build release APK (fdroid)
-      run: ./gradlew assembleFdroidRelease --no-daemon --stacktrace
-
-    - name: Find APKs
+    - name: Find and list APKs
+      if: always()
       run: |
-        echo "=== Searching for APKs ==="
-        find . -name "*.apk" -type f 2>/dev/null
-        echo "=== app/build/outputs ==="
-        ls -laR app/build/outputs/ 2>/dev/null || echo "No outputs dir"
+        echo "=== Searching for all APKs ==="
+        find . -name "*.apk" -type f 2>/dev/null || echo "No APKs found"
+        echo "=== app/build/outputs structure ==="
+        ls -laR app/build/outputs/ 2>/dev/null || echo "No outputs directory"
 
     - name: Upload all APKs
       uses: actions/upload-artifact@v4
