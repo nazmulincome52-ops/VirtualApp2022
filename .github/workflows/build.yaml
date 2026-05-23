@@ -25,6 +25,11 @@ jobs:
     - name: Setup Android SDK
       uses: android-actions/setup-android@v3
 
+    - name: Fix SDK XML for old AGP
+      run: |
+        # Strip <base-extension> elements that old AGP can't parse
+        find $ANDROID_HOME -name "package.xml" -exec sed -i '/<base-extension/,/<\/base-extension>/d' {} \;
+
     - name: Delete local.properties
       run: rm -f local.properties
 
@@ -37,8 +42,8 @@ jobs:
         path: |
           ~/.gradle/caches
           ~/.gradle/wrapper
-        key: gradle2-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-        restore-keys: gradle2-
+        key: gradle3-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+        restore-keys: gradle3-
 
     - name: Build APK
       run: ./gradlew assembleDebug --no-daemon --stacktrace
